@@ -1,0 +1,530 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load menu_filters %}
+
+{% block extra_css %}
+<style>
+    /* Styles de base */
+    :root {
+        --primary: #e67e22;
+        --primary-dark: #d35400;
+        --white: #ffffff;
+        --text: #333333;
+        --text-light: #666666;
+        --transition: all 0.3s ease;
+        --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        --shadow-hover: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+    
+    .menu-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+    }
+    
+    .menu-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+    
+    .menu-title {
+        font-size: 2.5rem;
+        color: var(--primary);
+        margin-bottom: 0.5rem;
+    }
+    
+    .menu-subtitle {
+        color: var(--text-light);
+        font-size: 1.1rem;
+    }
+    
+    .menu-category {
+        margin-bottom: 3rem;
+    }
+    
+    .category-title {
+        font-size: 1.8rem;
+        color: var(--text);
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid var(--primary);
+    }
+    
+    .menu-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 2rem;
+        padding: 1rem 0;
+    }
+    
+    .menu-item {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+        transition: var(--transition);
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        position: relative;
+    }
+    
+    .menu-item:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-hover);
+    }
+    
+    .menu-item-image-container {
+        position: relative;
+        width: 100%;
+        height: 200px; /* Hauteur fixe pour toutes les images */
+        overflow: hidden;
+        background: #f8f8f8;
+    }
+    
+    .menu-item-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+        display: block;
+    }
+    
+    .menu-item:hover .menu-item-image {
+        transform: scale(1.1);
+    }
+    
+    .menu-item-details {
+        padding: 1.5rem;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+    }
+    
+    .menu-item-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 0.75rem;
+    }
+    
+    .menu-item-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--text);
+        margin: 0 0 0.5rem 0;
+        flex: 1;
+        line-height: 1.3;
+        word-break: break-word;
+    }
+    
+    .menu-item-price {
+        background: var(--primary);
+        color: var(--white);
+        padding: 0.3rem 1rem;
+        border-radius: 20px;
+        font-weight: 700;
+        font-size: 1rem;
+        margin-left: 1rem;
+        white-space: nowrap;
+        transition: var(--transition);
+        display: inline-block;
+    }
+    
+    .menu-item:hover .menu-item-price {
+        background: var(--primary-dark);
+    }
+    
+    .menu-item-description {
+        color: var(--text-light);
+        margin: 0 0 1.2rem 0;
+        line-height: 1.6;
+        font-size: 0.9rem;
+        flex-grow: 1;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        line-clamp: 3;
+        -webkit-box-orient: vertical;
+    }
+    
+    .menu-item-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: auto;
+        padding-top: 1rem;
+        border-top: 1px solid #eee;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    
+    .menu-item-rating {
+        color: #f1c40f;
+        font-weight: 700;
+        font-size: 0.85rem;
+        display: flex;
+        align-items: center;
+        white-space: nowrap;
+    }
+    
+    .menu-item-button {
+        background: var(--primary);
+        color: white;
+        border: 2px solid var(--primary);
+        padding: 0.6rem 1.5rem;
+        border-radius: 30px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        box-shadow: 0 2px 8px rgba(230, 126, 34, 0.2);
+        min-width: 120px;
+        text-align: center;
+    }
+    
+    .menu-item-button:hover {
+        background: var(--primary-dark);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(230, 126, 34, 0.4);
+        border-color: var(--primary-dark);
+    }
+    
+    .menu-item-button:disabled {
+        background: #f5f5f5;
+        color: #aaa;
+        border-color: #ddd;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+    }
+    
+    .availability-badge {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+    
+    @media (max-width: 768px) {
+        .menu-grid {
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .menu-item {
+            margin-bottom: 0;
+        }
+        
+        .menu-title {
+            font-size: 1.8rem;
+        }
+        
+        .category-title {
+            font-size: 1.4rem;
+        }
+        
+        .menu-item-details {
+            padding: 1.2rem;
+        }
+        
+        .menu-item-button {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+            min-width: 100px;
+        }
+    }
+    
+    @keyframes shimmer {
+        0% { background-position: -1000px 0; }
+        100% { background-position: 1000px 0; }
+    }
+    
+    .image-loading {
+        position: relative;
+        background: #f5f5f5;
+        overflow: hidden;
+    }
+    
+    .image-loading::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        transform: translateX(-100%);
+        background: linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0) 0,
+            rgba(255, 255, 255, 0.2) 20%,
+            rgba(255, 255, 255, 0.5) 60%,
+            rgba(255, 255, 255, 0)
+        );
+        animation: shimmer 2s infinite;
+    }
+    
+    /* Styles de notification améliorés */
+    .notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px 25px;
+        border-radius: 8px;
+        color: white;
+        font-weight: 500;
+        z-index: 9999;
+        animation: slideIn 0.3s ease-out forwards;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        display: flex;
+        align-items: center;
+        max-width: 350px;
+        transform: translateX(120%);
+        opacity: 0;
+    }
+    
+    .notification::before {
+        content: '';
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        margin-right: 10px;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+    
+    .success::before {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z'/%3E%3C/svg%3E");
+    }
+    
+    .error::before {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z'/%3E%3C/svg%3E");
+    }
+    
+    .info::before {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z'/%3E%3C/svg%3E");
+    }
+    
+    .success { background-color: #2ecc71; }
+    .error { background-color: #e74c3c; }
+    .info { background-color: #3498db; }
+    
+    @keyframes slideIn {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+    
+    @keyframes fadeOut {
+        to { opacity: 0; transform: translateX(100%); }
+    }
+    
+    .animate-bounce {
+        animation: bounce 0.5s;
+    }
+    
+    @keyframes bounce {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.5); }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="menu-container">
+    <header class="menu-header">
+        <h1 class="menu-title">Notre Carte</h1>
+        <p class="menu-subtitle">Découvrez nos délicieux plats préparés avec des ingrédients frais et de saison</p>
+    </header>
+
+    {% if categories %}
+        {% for categorie, plats in categories.items %}
+        <section class="menu-category">
+            <h2 class="category-title">{{ categorie|default:"Autres plats" }}</h2>
+            <div class="menu-grid">
+                {% for plat in plats %}
+                <article class="menu-item" data-category="{{ plat.categorie|default:'plat'|lower }}">
+                    <div class="menu-item-image-container">
+                        {% if plat.image and plat.image.url %}
+                        <img 
+                            src="{{ plat.image.url }}" 
+                            alt="{{ plat.nom|default:'Image du plat' }}" 
+                            class="menu-item-image" 
+                            loading="lazy"
+                            onerror="this.onerror=null; this.src='{% static 'images/placeholder-food.jpg' %}'"
+                        >
+                        {% else %}
+                        <div class="menu-item-image image-loading" style="height: 100%;">
+                            <div style="display: flex; height: 100%; align-items: center; justify-content: center; background: #f5f5f5;">
+                                <span style="color: #999; font-size: 0.9rem;">Aucune image disponible</span>
+                            </div>
+                        </div>
+                        {% endif %}
+                        
+                        {% if plat.disponible == False %}
+                        <span class="availability-badge">Épuisé</span>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="menu-item-details">
+                        <div class="menu-item-header">
+                            <h3 class="menu-item-title">{{ plat.nom|default:"Nom non disponible" }}</h3>
+                            <span class="menu-item-price">
+                                {% if plat.prix is not None %}
+                                    {{ plat.prix|format_prix }}
+                                {% else %}
+                                    Prix sur demande
+                                {% endif %}
+                            </span>
+                        </div>
+                        
+                        {% if plat.description %}
+                        <p class="menu-item-description">
+                            {{ plat.description|truncatewords:20|default:'' }}
+                        </p>
+                        {% endif %}
+                        
+                        <div class="menu-item-footer">
+                            <div class="menu-item-rating">
+                                <span>★★★★★</span>
+                                <span style="color: var(--text-light); font-size: 0.8rem; margin-left: 0.5rem;">(24)</span>
+                            </div>
+                            <button 
+                                class="menu-item-button" 
+                                data-plat-id="{{ plat.id|default:'0' }}" 
+                                data-plat-nom="{{ plat.nom|escapejs }}"
+                                {% if plat.disponible == False %}disabled{% endif %}
+                            >
+                                {% if plat.disponible != False %}Commander{% else %}Indisponible{% endif %}
+                            </button>
+                        </div>
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+        </section>
+        {% endfor %}
+    {% else %}
+        <div class="no-items" style="text-align: center; padding: 2rem;">
+            <p style="font-size: 1.2rem; color: #666;">Aucun plat disponible pour le moment.</p>
+        </div>
+    {% endif %}
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Fonction pour afficher des notifications
+function showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    
+    // Supprimer la notification après 5 secondes
+    setTimeout(() => {
+        notification.style.animation = 'fadeOut 0.3s ease-out';
+        setTimeout(() => notification.remove(), 300);
+    }, 5000);
+}
+
+// Fonction pour gérer la commande
+function commanderPlat(platId, platNom, event) {
+    if (!platId || platId === '0') {
+        console.error('ID de plat invalide');
+        showNotification('Erreur : Impossible de commander ce plat (ID invalide)', 'error');
+        return;
+    }
+
+    // Vérification de l'authentification
+    const isAuthenticated = {{ user.is_authenticated|yesno:'true,false' }};
+    
+    if (!isAuthenticated) {
+        if (confirm('Vous devez être connecté pour commander. Voulez-vous vous connecter maintenant ?')) {
+            window.location.href = '{% url "login" %}?next=' + encodeURIComponent(window.location.pathname);
+        }
+        return;
+    }
+
+    // Afficher un indicateur de chargement
+    const button = event && event.target ? event.target : null;
+    let originalText = '';
+    
+    if (button) {
+        originalText = button.textContent || '';
+        button.disabled = true;
+        button.textContent = 'Traitement...';
+    }
+    
+    console.log(`Commande du plat: ${platNom} (ID: ${platId})`);
+    
+    // Exemple d'ajout au panier (à adapter selon votre logique)
+    fetch(`/api/commander/${platId}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}',
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        credentials: 'same-origin'
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Erreur réseau');
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            // Mettre à jour le compteur du panier s'il existe
+            const cartCount = document.getElementById('cart-count');
+            if (cartCount) {
+                const currentCount = parseInt(cartCount.textContent) || 0;
+                cartCount.textContent = currentCount + 1;
+                cartCount.classList.add('animate-bounce');
+                setTimeout(() => cartCount.classList.remove('animate-bounce'), 1000);
+            }
+            
+            // Afficher une notification
+            showNotification(`${platNom} a été ajouté à votre commande !`, 'success');
+        } else {
+            throw new Error(data.message || 'Erreur inconnue');
+        }
+    })
+    .catch(error => {
+        console.error('Erreur:', error);
+        showNotification(error.message || 'Erreur lors de la commande. Veuillez réessayer.', 'error');
+    })
+    .finally(() => {
+        if (button) {
+            button.disabled = false;
+            button.textContent = originalText;
+        }
+    });
+}
+
+// Gestionnaire d'événements pour les boutons de commande
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Page de menu chargée avec succès !');
+    
+    // Ajouter les gestionnaires d'événements aux boutons de commande
+    document.querySelectorAll('.menu-item-button').forEach(button => {
+        button.addEventListener('click', function(event) {
+            const platId = this.getAttribute('data-plat-id');
+            const platNom = this.getAttribute('data-plat-nom');
+            commanderPlat(platId, platNom, event);
+        });
+    });
+});
+</script>
+{% endblock %}

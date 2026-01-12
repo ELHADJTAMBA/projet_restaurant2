@@ -1,0 +1,106 @@
+[
+  {
+    "model": "menu.plat",
+    "pk": 1,
+    "fields": {
+      "nom": "Salade César",
+      "description": "Laitue romaine, croûtons, parmesan, sauce césar",
+      "prix": "9.90",
+      "categorie": "ENTREE",
+      "disponible": true,
+      "image": "plats/salade-cesar.jpg",
+      "date_creation": "2025-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "menu.plat",
+    "pk": 2,
+    "fields": {
+      "nom": "Tartare de Saumon",
+      "description": "Saumon frais, avocat, citron, aneth",
+      "prix": "12.50",
+      "categorie": "ENTREE",
+      "disponible": true,
+      "image": "plats/tartare-saumon.jpg",
+      "date_creation": "2025-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "menu.plat",
+    "pk": 3,
+    "fields": {
+      "nom": "Bœuf Bourguignon",
+      "description": "Viande de bœuf mijotée au vin rouge, carottes, champignons et oignons",
+      "prix": "18.90",
+      "categorie": "PLAT",
+      "disponible": true,
+      "image": "plats/boeuf-bourguignon.jpg",
+      "date_creation": "2025-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "menu.plat",
+    "pk": 4,
+    "fields": {
+      "nom": "Poulet Rôti",
+      "description": "Cuisse de poulet rôtie, pommes de terre et légumes de saison",
+      "prix": "16.50",
+      "categorie": "PLAT",
+      "disponible": true,
+      "image": "plats/poulet-roti.jpg",
+      "date_creation": "2025-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "menu.plat",
+    "pk": 5,
+    "fields": {
+      "nom": "Fondant au Chocolat",
+      "description": "Moelleux au cœur coulant, glace vanille",
+      "prix": "7.90",
+      "categorie": "DESSERT",
+      "disponible": true,
+      "image": "plats/fondant-chocolat.jpg",
+      "date_creation": "2025-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "menu.plat",
+    "pk": 6,
+    "fields": {
+      "nom": "Tarte Tatin",
+      "description": "Tarte aux pommes caramélisées, crème fraîche",
+      "prix": "7.50",
+      "categorie": "DESSERT",
+      "disponible": true,
+      "image": "plats/tarte-tatin.jpg",
+      "date_creation": "2025-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "menu.plat",
+    "pk": 7,
+    "fields": {
+      "nom": "Eau Minérale",
+      "description": "Bouteille d'eau minérale 50cl",
+      "prix": "3.50",
+      "categorie": "BOISSON",
+      "disponible": true,
+      "image": "plats/eau.jpg",
+      "date_creation": "2025-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "menu.plat",
+    "pk": 8,
+    "fields": {
+      "nom": "Vin Rouge",
+      "description": "Verre de vin rouge de la maison (15cl)",
+      "prix": "5.50",
+      "categorie": "BOISSON",
+      "disponible": true,
+      "image": "plats/vin-rouge.jpg",
+      "date_creation": "2025-01-01T00:00:00Z"
+    }
+  }
+]

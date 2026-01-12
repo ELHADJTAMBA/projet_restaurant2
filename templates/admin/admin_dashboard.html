@@ -1,0 +1,268 @@
+{% extends "admin/admin_base.html" %}
+{% load i18n static %}
+
+{% block title %}{{ title }} | {{ site_title|default:_('Tableau de bord') }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/admin-dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <!-- Cartes de statistiques -->
+    <div class="stats-cards">
+        <!-- Carte 1: Utilisateurs totaux -->
+        <div class="stat-card">
+            <div class="stat-icon blue">
+                <i class="fas fa-users fa-2x"></i>
+            </div>
+            <div class="stat-title">Utilisateurs totaux</div>
+            <div class="stat-value">{{ total_users|default:"0" }}</div>
+            <div class="stat-change positive">
+                <i class="fas fa-arrow-up"></i>
+                <span>+{{ new_users|default:"0" }} ce mois</span>
+            </div>
+        </div>
+
+        <!-- Carte 2: Commandes du jour -->
+        <div class="stat-card">
+            <div class="stat-icon green">
+                <i class="fas fa-shopping-cart fa-2x"></i>
+            </div>
+            <div class="stat-title">Commandes du jour</div>
+            <div class="stat-value">24</div>
+            <div class="stat-change positive">
+                <i class="fas fa-arrow-up"></i>
+                <span>+5% vs hier</span>
+            </div>
+        </div>
+
+        <!-- Carte 3: Revenus du mois -->
+        <div class="stat-card">
+            <div class="stat-icon orange">
+                <i class="fas fa-euro-sign fa-2x"></i>
+            </div>
+            <div class="stat-title">Revenus du mois</div>
+            <div class="stat-value">12,540 €</div>
+            <div class="stat-change positive">
+                <i class="fas fa-arrow-up"></i>
+                <span>+12% vs mois dernier</span>
+            </div>
+        </div>
+
+        <!-- Carte 4: Taux de satisfaction -->
+        <div class="stat-card">
+            <div class="stat-icon purple">
+                <i class="fas fa-star fa-2x"></i>
+            </div>
+            <div class="stat-title">Satisfaction clients</div>
+            <div class="stat-value">4.8/5</div>
+            <div class="stat-change negative">
+                <i class="fas fa-arrow-down"></i>
+                <span>-0.2 ce mois</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Graphique des ventes -->
+    <div class="chart-container">
+        <div class="chart-header">
+            <h2 class="chart-title">Aperçu des ventes</h2>
+            <div class="chart-actions">
+                <button class="btn btn-outline btn-sm active">7j</button>
+                <button class="btn btn-outline btn-sm">30j</button>
+                <button class="btn btn-outline btn-sm">90j</button>
+                <button class="btn btn-outline btn-sm">12m</button>
+            </div>
+        </div>
+        <div class="chart-wrapper" style="height: 300px;">
+            <canvas id="salesChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Dernières commandes -->
+    <div class="recent-orders">
+        <div class="card-header">
+            <h3 class="card-title">Dernières commandes</h3>
+            <a href="#" class="btn btn-primary btn-sm">Voir tout</a>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="order-table">
+                    <thead>
+                        <tr>
+                            <th>N° Commande</th>
+                            <th>Client</th>
+                            <th>Date</th>
+                            <th>Montant</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>#ORD-001</td>
+                            <td>Jean Dupont</td>
+                            <td>12/06/2023</td>
+                            <td>45,90 €</td>
+                            <td><span class="order-status status-completed">Terminée</span></td>
+                            <td>
+                                <button class="btn btn-outline btn-sm">Voir</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#ORD-002</td>
+                            <td>Marie Martin</td>
+                            <td>12/06/2023</td>
+                            <td>32,50 €</td>
+                            <td><span class="order-status status-processing">En cours</span></td>
+                            <td>
+                                <button class="btn btn-outline btn-sm">Voir</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#ORD-003</td>
+                            <td>Pierre Durand</td>
+                            <td>11/06/2023</td>
+                            <td>28,75 €</td>
+                            <td><span class="order-status status-pending">En attente</span></td>
+                            <td>
+                                <button class="btn btn-outline btn-sm">Voir</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#ORD-004</td>
+                            <td>Sophie Leroy</td>
+                            <td>11/06/2023</td>
+                            <td>19,99 €</td>
+                            <td><span class="order-status status-completed">Terminée</span></td>
+                            <td>
+                                <button class="btn btn-outline btn-sm">Voir</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#ORD-005</td>
+                            <td>Thomas Moreau</td>
+                            <td>10/06/2023</td>
+                            <td>52,30 €</td>
+                            <td><span class="order-status status-cancelled">Annulée</span></td>
+                            <td>
+                                <button class="btn btn-outline btn-sm">Voir</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Initialisation du graphique des ventes
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('salesChart').getContext('2d');
+    const salesChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'],
+            datasets: [{
+                label: 'Ventes mensuelles',
+                data: [12000, 19000, 15000, 25000, 22000, 30000, 28000, 32000, 29000, 35000, 40000, 45000],
+                backgroundColor: 'rgba(67, 97, 238, 0.1)',
+                borderColor: '#4361ee',
+                borderWidth: 2,
+                tension: 0.4,
+                fill: true,
+                pointBackgroundColor: '#fff',
+                pointBorderColor: '#4361ee',
+                pointBorderWidth: 2,
+                pointRadius: 4,
+                pointHoverRadius: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    backgroundColor: '#1e293b',
+                    titleFont: {
+                        family: 'Inter',
+                        size: 12,
+                        weight: '500'
+                    },
+                    bodyFont: {
+                        family: 'Inter',
+                        size: 14,
+                        weight: '600'
+                    },
+                    padding: 12,
+                    displayColors: false,
+                    callbacks: {
+                        label: function(context) {
+                            return ' ' + context.parsed.y.toLocaleString() + ' €';
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        drawBorder: false,
+                        color: 'rgba(0, 0, 0, 0.05)'
+                    },
+                    ticks: {
+                        font: {
+                            family: 'Inter',
+                            size: 12
+                        },
+                        callback: function(value) {
+                            return value.toLocaleString() + ' €';
+                        }
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    },
+                    ticks: {
+                        font: {
+                            family: 'Inter',
+                            size: 12
+                        }
+                    }
+                }
+            },
+            interaction: {
+                intersect: false,
+                mode: 'index'
+            }
+        }
+    });
+
+    // Gestion des boutons de période
+    const periodButtons = document.querySelectorAll('.chart-actions .btn');
+    periodButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Retirer la classe active de tous les boutons
+            periodButtons.forEach(btn => btn.classList.remove('active'));
+            
+            // Ajouter la classe active au bouton cliqué
+            this.classList.add('active');
+            
+            // Ici, vous pourriez mettre à jour les données du graphique
+            // en fonction de la période sélectionnée
+            console.log('Période sélectionnée:', this.textContent.trim());
+        });
+    });
+});
+</script>
+{% endblock %}

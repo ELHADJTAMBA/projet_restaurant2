@@ -1,0 +1,197 @@
+{% extends "admin/base.html" %}
+{% load static i18n %}
+
+{% block title %}{{ title }} | {{ site_title|default:_('Administration') }}{% endblock %}
+
+{% block extrastyle %}
+    {{ block.super }}
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" type="text/css" href="{% static 'admin/css/admin-custom.css' %}">
+    <style>
+        :root {
+            --primary: #3498db;
+            --primary-dark: #2c3e50;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --light: #f8f9fa;
+            --dark: #2c3e50;
+            --gray: #6c757d;
+            --gray-light: #e9ecef;
+        }
+        
+        /* Améliorations spécifiques */
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: #f5f7fa;
+        }
+        
+        #header {
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        #branding h1 {
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+        
+        .module h2, .module caption, .inline-group h2 {
+            font-size: 13px;
+            letter-spacing: 0.3px;
+        }
+        
+        /* Amélioration des cartes du tableau de bord */
+        .dashboard .module {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .dashboard .module:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+        
+        /* Amélioration des liens */
+        a:link, a:visited {
+            color: var(--primary);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        
+        a:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
+        }
+        
+        /* Amélioration des formulaires */
+        .form-row {
+            padding: 12px 0;
+            border-bottom: 1px solid #edf2f7;
+        }
+        
+        .form-row:last-child {
+            border-bottom: none;
+        }
+        
+        /* Amélioration des messages */
+        .messagelist {
+            margin: 0 0 20px 0;
+            padding: 0;
+            list-style: none;
+        }
+        
+        .messagelist li {
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+        }
+        
+        .messagelist li:before {
+            content: '✓';
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        
+        .messagelist .success:before {
+            content: '✓';
+        }
+        
+        .messagelist .warning:before {
+            content: '⚠';
+        }
+        
+        .messagelist .error:before {
+            content: '✗';
+        }
+    </style>
+    <style>
+        /* Styles personnalisés supplémentaires */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+        }
+        
+        #header {
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        #branding h1 {
+            font-weight: 600;
+            color: white !important;
+        }
+        
+        .module h2, .module caption, .inline-group h2 {
+            padding: 10px 15px;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+        }
+        
+        .object-tools a:link, .object-tools a:visited {
+            background: #3498db;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-weight: 500;
+        }
+        
+        .object-tools a:hover {
+            background: #2c3e50;
+        }
+        
+        /* Style pour les messages */
+        .messagelist li {
+            padding: 12px 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+        
+        /* Style pour les formulaires */
+        .form-row {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .form-row:last-child {
+            border-bottom: none;
+        }
+        
+        /* Style pour les tables */
+        table {
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        thead th {
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+        }
+        
+        tbody td, tbody th {
+            vertical-align: middle;
+            padding: 12px 15px;
+        }
+    </style>
+{% endblock %}
+
+{% block branding %}
+<div style="display: flex; align-items: center;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 10px;">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+    </svg>
+    <h1 id="site-name">
+        <a href="{% url 'admin:index' %}" style="color: white !important; text-decoration: none; font-weight: 600; letter-spacing: 0.5px;">
+            {{ site_header|default:_('Administration du Restaurant') }}
+        </a>
+    </h1>
+</div>
+{% endblock %}
+
+{% block nav-global %}{% endblock %}

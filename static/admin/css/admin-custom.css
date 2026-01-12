@@ -1,0 +1,192 @@
+/* Reset et styles de base */
+body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* En-tête */
+#header {
+    background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+    color: white;
+    padding: 0 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+#branding h1 {
+    font-weight: 600;
+    color: white !important;
+    font-size: 1.5rem;
+    padding: 15px 0;
+}
+
+#branding h1 a:link, #branding h1 a:visited {
+    color: white !important;
+    text-decoration: none;
+}
+
+/* Navigation */
+#user-tools {
+    font-weight: 500;
+    padding: 15px 0;
+}
+
+#user-tools a {
+    color: rgba(255, 255, 255, 0.9) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.2s;
+}
+
+#user-tools a:hover {
+    color: white !important;
+    border-bottom-color: white;
+}
+
+/* Conteneur principal */
+#container {
+    background: #f8f9fa;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    margin: 20px;
+}
+
+/* Cartes de module */
+.dashboard #content {
+    width: 100%;
+    max-width: 1200px;
+    margin: 20px auto;
+}
+
+.module {
+    background: white;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.module h2, .module caption, .inline-group h2 {
+    background: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
+    color: white;
+    padding: 12px 15px;
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+/* Tableaux */
+thead th {
+    background: #f1f5f9 !important;
+    color: #2c3e50;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    padding: 12px 15px !important;
+}
+
+tbody td, tbody th {
+    padding: 12px 15px !important;
+    vertical-align: middle;
+    border-bottom: 1px solid #edf2f7;
+}
+
+tr:hover {
+    background-color: #f8fafc !important;
+}
+
+/* Formulaires */
+input[type=text], input[type=password], input[type=email], input[type=url],
+input[type=number], input[type=tel], textarea, select, .vTextField {
+    padding: 10px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    width: 100%;
+    max-width: 100%;
+    font-size: 14px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input[type=text]:focus, input[type=password]:focus, input[type=email]:focus,
+input[type=url]:focus, input[type=number]:focus, input[type=tel]:focus,
+textarea:focus, select:focus, .vTextField:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+    outline: none;
+}
+
+/* Boutons */
+.button, input[type=submit], input[type=button], .submit-row input, a.button {
+    background: #3498db;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.2s;
+}
+
+.button:hover, input[type=submit]:hover, input[type=button]:hover, a.button:hover {
+    background: #2c3e50;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.button.default, input[type=submit].default, .submit-row input.default {
+    background: #2ecc71;
+}
+
+.button.default:hover, input[type=submit].default:hover {
+    background: #27ae60;
+}
+
+/* Messages */
+.messagelist li {
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 6px;
+    font-weight: 500;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.messagelist .success {
+    background: #d4edda;
+    color: #155724;
+    border-left: 4px solid #28a745;
+}
+
+.messagelist .error {
+    background: #f8d7da;
+    color: #721c24;
+    border-left: 4px solid #dc3545;
+}
+
+.messagelist .warning {
+    background: #fff3cd;
+    color: #856404;
+    border-left: 4px solid #ffc107;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    #header {
+        padding: 0 15px;
+    }
+    
+    #container {
+        margin: 10px;
+    }
+    
+    .dashboard #content {
+        padding: 10px;
+    }
+}

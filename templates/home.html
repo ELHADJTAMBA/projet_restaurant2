@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RestauPro - Tableau de bord</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f7fa;
+            margin: 0;
+            padding: 0;
+        }
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            background: #1e293b;
+            color: white;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+        .main-content {
+            margin-left: 250px;
+            min-height: 100vh;
+            transition: all 0.3s;
+        }
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: #94a3b8;
+            text-decoration: none;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+        }
+        .nav-link:hover, .nav-link.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-left-color: #3b82f6;
+        }
+        .nav-link i {
+            margin-right: 12px;
+            width: 20px;
+            text-align: center;
+        }
+        .top-bar {
+            height: 70px;
+            background: white;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 0 30px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: white;
+        }
+        .content-wrapper {
+            padding: 30px;
+        }
+        .card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: #ef4444;
+            color: white;
+            border-radius: 9999px;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: bold;
+        }
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .progress-bar {
+            height: 6px;
+            border-radius: 3px;
+            background-color: #e2e8f0;
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            border-radius: 3px;
+        }
+        .table-row {
+            transition: background-color 0.2s;
+        }
+        .table-row:hover {
+            background-color: #f8fafc;
+        }
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: capitalize;
+        }
+    </style>
+</head>
+<body>
+    <!-- Barre latérale -->
+    <aside class="sidebar">
+        <div class="p-4">
+            <h2 class="text-2xl font-bold text-white mb-8">RestauPro</h2>
+            
+            <nav class="mt-8">
+                <a href="#" class="nav-link active">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="nav-link">
+                    <i class="fas fa-table"></i>
+                    <span>Tables</span>
+                </a>
+                <a href="#" class="nav-link">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Commandes</span>
+                </a>
+                <a href="/menu/list/" class="nav-link">
+                    <i class="fas fa-utensils"></i>
+                    <span>Menu</span>
+                </a>
+                <a href="#" class="nav-link">
+                    <i class="fas fa-cash-register"></i>
+                    <span>Caisse</span>
+                </a>
+                <a href="#" class="nav-link">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                    <span>Dépenses</span>
+                </a>
+            </nav>
+        </div>
+    </aside>
+
+    <!-- Contenu principal -->
+    <div class="main-content">
+        <!-- Barre supérieure -->
+        <header class="top-bar">
+            <div class="user-info">
+                <div class="relative">
+                    <i class="fas fa-bell text-gray-500 text-xl cursor-pointer hover:text-gray-700"></i>
+                    <span class="notification-badge">3</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="user-avatar">ET</div>
+                    <div>
+                        <div class="font-medium">Elhadj Tamba Diallo</div>
+                        <div class="text-sm text-gray-500">Conakry Lambanyi</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Contenu de la page -->
+        <div class="content-wrapper">
+            <h1 class="text-2xl font-bold mb-6">Tableau de bord</h1>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                <!-- Cartes de statistiques -->
+                <div class="card">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500 text-sm">Chiffre d'affaires</p>
+                            <h3 class="text-2xl font-bold">1,250,000 GNF</h3>
+                            <p class="text-green-500 text-sm">+12% vs mois dernier</p>
+                        </div>
+                        <div class="stat-icon bg-blue-100">
+                            <i class="fas fa-chart-line text-blue-500 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500 text-sm">Commandes</p>
+                            <h3 class="text-2xl font-bold">42</h3>
+                            <p class="text-green-500 text-sm">+5% vs hier</p>
+                        </div>
+                        <div class="stat-icon bg-green-100">
+                            <i class="fas fa-shopping-cart text-green-500 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500 text-sm">Tables occupées</p>
+                            <h3 class="text-2xl font-bold">8/15</h3>
+                            <p class="text-red-500 text-sm">53% d'occupation</p>
+                        </div>
+                        <div class="stat-icon bg-yellow-100">
+                            <i class="fas fa-chair text-yellow-500 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500 text-sm">Nouveaux clients</p>
+                            <h3 class="text-2xl font-bold">12</h3>
+                            <p class="text-green-500 text-sm">+3% vs hier</p>
+                        </div>
+                        <div class="stat-icon bg-purple-100">
+                            <i class="fas fa-user-plus text-purple-500 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dernières commandes -->
+            <div class="card mb-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-lg font-semibold">Dernières commandes</h2>
+                    <a href="#" class="text-blue-500 text-sm font-medium hover:text-blue-600">Voir tout</a>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full">
+                        <thead>
+                            <tr class="text-left text-gray-500 text-sm border-b">
+                                <th class="pb-3 font-medium">N° Commande</th>
+                                <th class="pb-3 font-medium">Client</th>
+                                <th class="pb-3 font-medium">Statut</th>
+                                <th class="pb-3 font-medium text-right">Montant</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-row">
+                                <td class="py-3 font-medium">#4589</td>
+                                <td>Table 5</td>
+                                <td><span class="status-badge bg-green-100 text-green-700">Payée</span></td>
+                                <td class="text-right font-medium">125,000 GNF</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-3 font-medium">#4588</td>
+                                <td>Table 12</td>
+                                <td><span class="status-badge bg-yellow-100 text-yellow-700">En cours</span></td>
+                                <td class="text-right font-medium">85,000 GNF</td>
+                            </tr>
+                            <tr class="table-row">
+                                <td class="py-3 font-medium">#4587</td>
+                                <td>À emporter</td>
+                                <td><span class="status-badge bg-blue-100 text-blue-700">Terminée</span></td>
+                                <td class="text-right font-medium">92,500 GNF</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Statistiques des plats populaires -->
+            <div class="card">
+                <h2 class="text-lg font-semibold mb-4">Plats populaires</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-medium">Poulet Yassa</span>
+                            <span class="text-gray-600 text-sm">45 commandes</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-bar-fill bg-blue-500" style="width: 75%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-medium">Thiéboudiène</span>
+                            <span class="text-gray-600 text-sm">38 commandes</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-bar-fill bg-green-500" style="width: 65%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-medium">Mafé de boeuf</span>
+                            <span class="text-gray-600 text-sm">32 commandes</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-bar-fill bg-yellow-500" style="width: 55%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-medium">Poulet DG</span>
+                            <span class="text-gray-600 text-sm">28 commandes</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-bar-fill bg-purple-500" style="width: 45%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script>
+        // Script pour le menu responsive
+        document.addEventListener('DOMContentLoaded', function() {
+            // Ajouter la classe active au clic sur les liens du menu
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Ici, vous pouvez ajouter la logique pour charger le contenu de la section sélectionnée
+                    const section = this.querySelector('span').textContent.toLowerCase();
+                    console.log(`Chargement de la section: ${section}`);
+                    // Ajoutez ici la logique pour charger le contenu de la section
+                });
+            });
+            
+            // Simulation de chargement des données
+            function updateStats() {
+                // Cette fonction peut être utilisée pour mettre à jour les statistiques en temps réel
+                console.log('Mise à jour des statistiques...');
+            }
+            
+            // Mettre à jour les stats toutes les 30 secondes
+            setInterval(updateStats, 30000);
+        });
+    </script>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg overflow-hidden shadow-md">
+                    <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80" alt="Spécialité 3" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Salade Fraîcheur</h3>
+                        <p class="text-gray-600 mb-4">Des légumes frais du marché, des herbes aromatiques et une vinaigrette maison.</p>
+                        <span class="text-indigo-600 font-bold">16,90 €</span>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-12">
+                <a href="/menu/list/" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-full text-lg transition duration-300 inline-block">Voir tout le menu</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Contact -->
+                    <h3 class="text-xl font-semibold mb-4">Horaires d'ouverture</h3>
+                    <ul class="space-y-2 text-gray-600">
+                        <li class="flex justify-between"><span>Lundi - Vendredi</span> <span>12h00 - 14h30 | 19h00 - 22h30</span></li>
+                        <li class="flex justify-between"><span>Samedi</span> <span>12h00 - 15h00 | 19h00 - 23h00</span></li>
+                        <li class="flex justify-between"><span>Dimanche</span> <span>12h00 - 15h00</span></li>
+                    </ul>
+                    
+                    <h3 class="text-xl font-semibold mt-8 mb-4">Contact</h3>
+                    <div class="space-y-2 text-gray-600">
+                        <p><i class="fas fa-map-marker-alt text-indigo-600 mr-2"></i> 123 Rue du Restaurant, 75000 Paris</p>
+                        <p><i class="fas fa-phone text-indigo-600 mr-2"></i> +33 1 23 45 67 89</p>
+                        <p><i class="fas fa-envelope text-indigo-600 mr-2"></i> contact@restaurant.com</p>
+                    </div>
+                    
+                    <div class="mt-6 flex space-x-4">
+                        <a href="#" class="text-gray-600 hover:text-indigo-600"><i class="fab fa-facebook-f text-2xl"></i></a>
+                        <a href="#" class="text-gray-600 hover:text-indigo-600"><i class="fab fa-instagram text-2xl"></i></a>
+                        <a href="#" class="text-gray-600 hover:text-indigo-600"><i class="fab fa-tripadvisor text-2xl"></i></a>
+                    </div>
+                </div>
+                <div class="h-96 bg-gray-200 rounded-lg overflow-hidden">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2624.991625693758!2d2.2922926156745374!3d48.85837007928747!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e66e2964e34e2d%3A0x8ddca9ee380ef7e0!2sTour%20Eiffel!5e0!3m2!1sfr!2sfr!4v1620000000000!5m2!1sfr!2sfr" 
+                            width="100%" 
+                            height="100%" 
+                            style="border:0;" 
+                            allowfullscreen="" 
+                            loading="lazy">
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pied de page -->
+    <footer class="bg-gray-900 text-white py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <h3 class="text-xl font-bold mb-2">Le Bon Appétit</h3>
+                    <p class="text-gray-400">Une expérience culinaire inoubliable</p>
+                </div>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-white">Mentions Légales</a>
+                    <a href="#" class="text-gray-400 hover:text-white">Politique de Confidentialité</a>
+                    <a href="#" class="text-gray-400 hover:text-white">CGV</a>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2025 Le Bon Appétit. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
